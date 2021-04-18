@@ -1,0 +1,42 @@
+import java.util.Scanner;
+
+public class HurwitzRadon {
+
+    public static void main(String [] args) {
+
+        System.out.println("Մուտքագրեք n-ը");
+
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+
+        if(n % 2 == 0){
+            System.out.println("n-ը զույգ է խնդրում ենք մուտքագրել կենտ թիվ");
+        }
+        else {
+            double t = 0;
+            double p = 0;
+            double v = (n + 1) / (2 * t + 1);
+
+            while (v >= 1) {
+                v = (n + 1) / (2 * t + 1);
+
+                if (v - (int) v == 0 && ((int) v & -(int) v) == v) {
+                    while (v != 1) {
+                        p++;
+                        v /= 2;
+                    }
+                }
+                t++;
+            }
+
+            int r = (int) p % 4;
+            int q = ((int) p - r) / 4;
+            int Rn = (int) Math.pow(2, r) + 8 * q - 1;
+
+
+            System.out.println("ρ(" + n + ")=" + Rn);
+        }
+
+    }
+
+}
