@@ -2,15 +2,10 @@ import java.util.Scanner;
 
 public class HurwitzRadon {
 
-    public static void main(String [] args) {
-
-        System.out.println("Մուտքագրեք n-ը");
-
-        Scanner scanner = new Scanner(System.in);
-        int n = scanner.nextInt();
-
+    static int HurwitzRadon( int n) {
+        int Rn=0;
         if(n % 2 == 0){
-            System.out.println("n-ը զույգ է խնդրում ենք մուտքագրել կենտ թիվ");
+            return Rn;
         }
         else {
             double t = 0;
@@ -31,10 +26,128 @@ public class HurwitzRadon {
 
             int r = (int) p % 4;
             int q = ((int) p - r) / 4;
-            int Rn = (int) Math.pow(2, r) + 8 * q - 1;
+            Rn = (int) Math.pow(2, r) + 8 * q - 1;
+        }
+        return Rn;
+    }
+    private static void reverse(int[] a, int n) {
+        int i, t;
+        for (i = 0; i < n / 2; i++) {
+            t = a[i];
+            a[i] = a[n - i - 1];
+            a[n - i - 1] = t;
+        }
+    }
+    static int am( int a, int m) {
+
+        int bin_a = Integer.parseInt(Integer.toString(a, 2));
 
 
-            System.out.println("ρ(" + n + ")=" + Rn);
+        int[] digits = Integer.toString(bin_a).chars().map(c -> c-'0').toArray();
+        reverse(digits, digits.length);
+
+
+        int am=0;
+        int c=1;
+        int index = 4*m;
+        while (c < 5){
+            if(index < digits.length) {
+                am = am + (c * digits[index]);
+            }
+            index++;
+            c *= 2;
+        }
+        return am;
+    }
+    static int T( int a, int m) {
+
+        int bin_a = Integer.parseInt(Integer.toString(a, 2));
+
+        int[] digits = Integer.toString(bin_a).chars().map(c -> c-'0').toArray();
+        reverse(digits, digits.length);
+
+        int sum = 0;
+        int T=1;
+        for(int i=m+1;4*i - 1< digits.length; i += 4){
+
+            sum += digits[4*i - 1];
+
+        }
+
+        if(sum % 2 != 0){
+            T = -1;
+        }
+        return T;
+    }
+
+
+
+
+    static int S( int k, int a) {
+
+        int[][] Smatrix = { {1,1,1,1,1,1,1,1},
+                            {1,-1,1,-1,1,-1,-1,1},
+                            {1,-1,-1,1,1,1,-1,-1},
+                            {1,1,-1,-1,1,-1,1,-1},
+                            {1,-1,-1,-1,-1,1,1,1},
+                            {1,1,-1,1,-1,-1,-1,1},
+                            {1,1,1,-1,-1,1,-1,-1},
+                            {1,-1,1,1,-1,-1,1,-1} };
+        int S=1;
+        int m = k/8;
+        int l = k%8;
+        if(k == 0){
+            S = 1;
+        }
+        else if(m>0 && l==0){
+            S = T(a, m-1);
+        }
+        else if(m >= 0 && l>0){
+            S = T(a, m) * Smatrix[l][am(a,m)];
+        }
+        return S;
+    }
+    static int P( int k, int a) {
+
+        int bin_k = Integer.parseInt(Integer.toString(k, 2));
+        int bin_a = Integer.parseInt(Integer.toString(a, 2));
+
+        int maxNum;
+        if (bin_a > bin_k) {
+            maxNum = bin_a;
+        } else {
+            maxNum = bin_k;
+        }
+        int P=0;
+        int i =0;
+        while (maxNum != 0) {
+            maxNum /= 10;
+            if (bin_a % 10 + bin_k % 10 == 1) {
+                P += Math.pow(2, i);
+            }
+            bin_a = (bin_a - bin_a % 10) / 10;
+            bin_k = (bin_k - bin_k % 10) / 10;
+            i++;
+        }
+        return P;
+    }
+
+
+
+    public static void main(String [] args) {
+
+        System.out.println("Մուտքագրեք n-ը");
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+
+        for (int i=0; i<= HurwitzRadon(n); i++) {
+            for (int j=0; j<=n; j++) {
+
+                String sign = "";
+                if(S(i,j) == -1) sign="-";
+                System.out.print( sign + "X" + P(i,j) + "  ");
+            }
+            System.out.println("");
         }
 
     }
